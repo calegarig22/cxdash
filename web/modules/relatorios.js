@@ -4,7 +4,7 @@
 import { html } from "htm/preact";
 import { useState } from "preact/hooks";
 import { useCollection } from "../lib/hooks.js";
-import { Table, BarChart, Select, baixarCSV, brl } from "../lib/ui.js";
+import { Table, BarChart, Select, baixarCSV, baixarXLSX, baixarPDF, brl } from "../lib/ui.js";
 
 /* agrupa `rows`pela tupla de chaves `keys`, contando ocorrências e
    somando os campos indicados em `sums`. Devolve array de linhas agregadas. */
@@ -139,11 +139,13 @@ export function View({ user }) {
 
   return html`
     <h1 class="h1">Relatórios</h1>
-    <p class="sub">Relatórios consolidados do CX — visualize, filtre e exporte em CSV.</p>
+    <p class="sub">Relatórios consolidados do CX — visualize, filtre e exporte em CSV, Excel ou PDF.</p>
 
     <div class="toolbar">
       <div class="grow">${Select({ label: "Selecione o relatório", value: rel, onInput: setRel, options: nomes })}</div>
-      <button class="btn" onClick=${() =>baixarCSV(nomeArq, colunas, linhas)}>Exportar</button>
+      <button class="btn" disabled=${!linhas.length} onClick=${() =>baixarCSV(nomeArq, colunas, linhas)}>CSV</button>
+      <button class="btn" disabled=${!linhas.length} onClick=${() =>baixarXLSX(nomeArq, colunas, linhas)}>Excel</button>
+      <button class="btn" disabled=${!linhas.length} onClick=${() =>baixarPDF(nomeArq, colunas, linhas, rel)}>PDF</button>
     </div>
 
     <div class="count">${linhas.length} linha(s)</div>

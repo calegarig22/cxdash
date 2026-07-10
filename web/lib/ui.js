@@ -286,6 +286,58 @@ export function baixarCSV(nome, columns, rows) {
   a.click();
 }
 
+/* valor de exportação de uma célula (respeita coluna.csv; números seguem números) */
+const valorCelula = (col, row) => {
+  const v = col.csv ? col.csv(row) : row[col.key];
+  return v == null ? "" : v;
+};
+
+/* Excel (.xlsx) real — SheetJS carregado sob demanda via ESM/CDN (permitido pela CSP) */
+export async function baixarXLSX(nome, columns, rows) {
+  try {
+    const XLSX = await import("https://esm.sh/xlsx@0.18.5");
+    const aoa = [columns.map((c) => c.label)];
+    for (const r of rows) aoa.push(columns.map((c) => valorCelula(c, r)));
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws["!cols"] = columns.map((c) => ({ wch: Math.max(12, String(c.label).length + 2) }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+    XLSX.writeFile(wb, nome + ".xlsx");
+  } catch (e) {
+    toast("Não foi possível gerar o Excel.", "err");
+  }
+}
+
+/* PDF — abre uma via de impressão formatada; o usuário salva como PDF (Cmd/Ctrl+P → Salvar) */
+export function baixarPDF(nome, columns, rows, titulo) {
+  const esc = (v) => String(v == null ? "" : v).replace(/[&<>]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[m]));
+  const cab = columns.map((c) => `<th>${esc(c.label)}</th>`).join("");
+  const corpo = rows.map((r) => "<tr>" + columns.map((c) => `<td>${esc(valorCelula(c, r))}</td>`).join("") + "</tr>").join("");
+  const dataStr = new Date().toLocaleDateString("pt-BR");
+  const w = window.open("", "_blank");
+  if (!w) { toast("Permita pop-ups para gerar o PDF.", "err"); return; }
+  w.document.write(`<!doctype html><html lang="pt-br"><head><meta charset="utf-8"><title>${esc(titulo || nome)}</title>
+    <style>
+      *{font-family:Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      body{margin:28px;color:#0f172a}
+      h1{font-size:18px;margin:0 0 2px}
+      .sub{color:#64748b;font-size:12px;margin:0 0 16px}
+      .bar{height:3px;background:#e11d48;width:64px;margin:0 0 14px;border-radius:2px}
+      table{width:100%;border-collapse:collapse;font-size:11px}
+      th,td{border:1px solid #e2e8f0;padding:6px 8px;text-align:left;vertical-align:top}
+      thead th{background:#0f172a;color:#fff}
+      tbody tr:nth-child(even){background:#f8fafc}
+      @page{margin:14mm}
+    </style></head><body>
+    <div class="bar"></div>
+    <h1>${esc(titulo || nome)}</h1>
+    <p class="sub">Alumni by Better · ${rows.length} registro(s) · gerado em ${dataStr}</p>
+    <table><thead><tr>${cab}</tr></thead><tbody>${corpo}</tbody></table>
+    </body></html>`);
+  w.document.close();
+  setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 350);
+}
+
 /* ======================================================================
    REGRAS DE NEGÓCIO
    ====================================================================== */
