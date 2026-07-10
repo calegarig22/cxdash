@@ -8,7 +8,7 @@ import { store } from "../lib/store.js";
 import { useCollection, useUsers, useSelecao } from "../lib/hooks.js";
 import {
   Badge, Table, Modal, Tabs, Kpi, BarChart, Text, Area, Select, FilterSelect,
-  Assignee, BulkBar, toast, baixarCSV, DOM,
+  Assignee, BulkBar, toast, ExportButtons, DOM,
 } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
 
@@ -128,7 +128,7 @@ function Lista({ user, users, rows }) {
       ${FilterSelect({ label: "Tipo", value: fTipo, onInput: setFTipo, options: DOM.voc_tipo })}
       ${FilterSelect({ label: "Status", value: fStatus, onInput: setFStatus, options: DOM.voc_status })}
       <div class="grow"></div>
-      <button class="btn" onClick=${() =>baixarCSV("voice_of_customer", cols, filtradas)}>Exportar</button>
+      ${ExportButtons({ nome: "voice_of_customer", columns: cols, rows: filtradas, titulo: "Feedbacks" })}
     </div>
     <div class="count">${filtradas.length} feedback(s)</div>
     ${BulkBar({ n: sel.size, onClear: clear, actions: [

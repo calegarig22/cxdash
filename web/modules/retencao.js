@@ -6,7 +6,7 @@ import { useState } from "preact/hooks";
 import { useCollection, useUsers } from "../lib/hooks.js";
 import {
   Badge, Table, Kpi, BarChart, FilterSelect,
-  baixarCSV, brl, diasDesde, DOM,
+  ExportButtons, brl, diasDesde, DOM,
 } from "../lib/ui.js";
 import { CasoModal } from "./cancelamentos.js";
 
@@ -57,7 +57,7 @@ export function View({ user }) {
       ${FilterSelect({ label: "Produto", value: fProduto, onInput: setFProduto, options: DOM.produto })}
       ${FilterSelect({ label: "Responsável", value: fResp, onInput: setFResp, options: nomes })}
       <div class="grow"></div>
-      <button class="btn" onClick=${() =>baixarCSV("retencao", cols, base)}>Exportar</button>
+      ${ExportButtons({ nome: "retencao", columns: cols, rows: base, titulo: "Retenção / Churn" })}
     </div>
 
     <div class="grid c4">

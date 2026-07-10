@@ -6,7 +6,7 @@ import { store } from "../lib/store.js";
 import { useCollection, useUsers, useSelecao } from "../lib/hooks.js";
 import {
   Badge, Table, Modal, Text, Num, DateF, Area, Select, FilterSelect, Assignee, Tabs, BulkBar,
-  toast, copiar, baixarCSV, brl, diasDesde, reguaEstagio, mensagemCobranca, DOM,
+  toast, copiar, ExportButtons, brl, diasDesde, reguaEstagio, mensagemCobranca, DOM,
   aplicarEscopo, podeVerTudo,
 } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
@@ -87,7 +87,7 @@ export function View({ user }) {
       ${FilterSelect({ label: "Status", value: fStatus, onInput: setFStatus, options: DOM.cobr_status })}
       <div class="grow"><label>Aluno</label>
         <input placeholder="buscar aluno" value=${fBusca} onInput=${(e) =>setFBusca(e.target.value)}/></div>
-      <button class="btn" onClick=${() =>baixarCSV("cobrancas", cols, filtradas)}>Exportar</button>
+      ${ExportButtons({ nome: "cobrancas", columns: cols, rows: filtradas, titulo: "Cobranças" })}
     </div>
 
     ${criticos.map((r) =>html`<div style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:8px 14px;border-radius:10px;margin-bottom:8px">

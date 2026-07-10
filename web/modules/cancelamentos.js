@@ -8,7 +8,7 @@ import { store } from "../lib/store.js";
 import { useCollection, useUsers, useSelecao } from "../lib/hooks.js";
 import {
   Badge, Table, Modal, Text, Num, DateF, Area, Select, Segmented, FilterSelect, Assignee, ReadOnly, Tabs, BulkBar,
-  toast, baixarCSV, brl, diasDesde, DOM, aplicarEscopo, podeVerTudo, ehAdmin,
+  toast, ExportButtons, brl, diasDesde, DOM, aplicarEscopo, podeVerTudo, ehAdmin,
 } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
 
@@ -200,7 +200,7 @@ export function View({ user }) {
       ${FilterSelect({ label: "Resultado", value: fResult, onInput: setFResult, options: DOM.resultado_caso })}
       <div class="grow"><label>Aluno</label>
         <input placeholder="buscar por aluno" value=${fBusca} onInput=${(e) =>setFBusca(e.target.value)}/></div>
-      <button class="btn" onClick=${() =>baixarCSV("cancelamentos", cols, filtrados)}>Exportar</button>
+      ${ExportButtons({ nome: "cancelamentos", columns: cols, rows: filtrados, titulo: "Cancelamentos" })}
     </div>
 
     ${alertas.map(({ c, dias }) =>html`

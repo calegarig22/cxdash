@@ -6,7 +6,7 @@ import { store } from "../lib/store.js";
 import { useCollection } from "../lib/hooks.js";
 import {
   Badge, Table, Modal, Text, Select, DateF, Area, FilterSelect,
-  toast, baixarCSV, todayISO, DOM,
+  toast, ExportButtons, todayISO, DOM,
 } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
 
@@ -62,7 +62,7 @@ export function View({ user }) {
       ${FilterSelect({ label: "Status", value: fStatus, onInput: setFStatus, options: DOM.cons_status })}
       <div class="grow"><label>Aluno</label>
         <input placeholder="buscar por aluno" value=${fBusca} onInput=${(e) =>setFBusca(e.target.value)}/></div>
-      <button class="btn" onClick=${() =>baixarCSV("consultorias", cols, filtradas)}>Exportar</button>
+      ${ExportButtons({ nome: "consultorias", columns: cols, rows: filtradas, titulo: "Consultorias" })}
     </div>
     <div class="count">${filtradas.length} consultoria(s)</div>
     ${Table({ columns: cols, rows: filtradas, onRow: (r) =>setEdit({ ...r }) })}

@@ -5,7 +5,7 @@ import { useState, useEffect } from "preact/hooks";
 import { store } from "../lib/store.js";
 import { useCollection } from "../lib/hooks.js";
 import { useUsers } from "../lib/hooks.js";
-import { Badge, Table, Modal, Tabs, Text, Select, Assignee, FilterSelect, toast, baixarCSV, DOM } from "../lib/ui.js";
+import { Badge, Table, Modal, Tabs, Text, Select, Assignee, FilterSelect, toast, ExportButtons, DOM } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
 import { gerarTarefasAuto } from "../lib/autotasks.js";
 
@@ -176,7 +176,7 @@ function Usuarios({ user }) {
   return html`
     <div class="toolbar">
       <button class="btn primary" onClick=${() =>setNovo({ nome: "", email: "", senha: "", perfil: DOM.perfil[1], ativo: true })}>Criar usuário</button>
-      <button class="btn" onClick=${() =>baixarCSV("usuarios", cols, rows)}>Exportar</button>
+      ${ExportButtons({ nome: "usuarios", columns: cols, rows: rows, titulo: "Usuários" })}
     </div>
     <div class="count">${rows.length} usuário(s)</div>
     ${Table({ columns: cols, rows, onRow: (r) =>setEdit({ ...r }) })}
@@ -389,7 +389,7 @@ function Logs() {
         <input placeholder="filtrar por usuário" value=${fUser} onInput=${(e) =>setFUser(e.target.value)}/></div>
       <div class="grow"><label>Ação</label>
         <input placeholder="filtrar por ação" value=${fAcao} onInput=${(e) =>setFAcao(e.target.value)}/></div>
-      <button class="btn" onClick=${() =>baixarCSV("logs", cols, filtradas)}>Exportar</button>
+      ${ExportButtons({ nome: "logs", columns: cols, rows: filtradas, titulo: "Logs de auditoria" })}
     </div>
     <div class="count">${filtradas.length} registro(s)</div>
     ${Table({ columns: cols, rows: filtradas })}`;

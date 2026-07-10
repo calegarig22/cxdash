@@ -7,7 +7,7 @@ import { store } from "../lib/store.js";
 import { useCollection, useUsers, useSelecao } from "../lib/hooks.js";
 import {
   Badge, Table, Modal, Text, Select, DateF, Area, FilterSelect, Assignee, ReadOnly, Tabs, BulkBar,
-  toast, baixarCSV, diasPara, DOM, aplicarEscopo, podeVerTudo, ehAdmin,
+  toast, ExportButtons, diasPara, DOM, aplicarEscopo, podeVerTudo, ehAdmin,
 } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
 
@@ -109,7 +109,7 @@ export function View({ user }) {
       ${FilterSelect({ label: "Prioridade", value: fPrio, onInput: setFPrio, options: DOM.prioridade })}
       ${verTudo && escopo === "todas" ? html`<div class="grow"><label>Responsável</label>
         <input placeholder="filtrar por responsável" value=${fResp} onInput=${(e) =>setFResp(e.target.value)}/></div>` : ""}
-      <button class="btn" onClick=${() =>baixarCSV("tarefas", cols, filtradas)}>Exportar</button>
+      ${ExportButtons({ nome: "tarefas", columns: cols, rows: filtradas, titulo: "Tarefas" })}
     </div>
     <div class="count">${filtradas.length} tarefa(s)${verTudo && escopo === "todas" ? " · equipe" : " · minhas"}</div>
     ${BulkBar({ n: sel.size, onClear: clear, actions: [

@@ -338,6 +338,16 @@ export function baixarPDF(nome, columns, rows, titulo) {
   setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 350);
 }
 
+/* Grupo de exportação reutilizável: CSV · Excel (.xlsx) · PDF, a partir do mesmo
+   par (columns, rows). `titulo` aparece no cabeçalho do PDF. */
+export function ExportButtons({ nome, columns, rows, titulo }) {
+  const vazio = !rows || !rows.length;
+  return html`
+    <button class="btn" disabled=${vazio} onClick=${() => baixarCSV(nome, columns, rows)}>CSV</button>
+    <button class="btn" disabled=${vazio} onClick=${() => baixarXLSX(nome, columns, rows)}>Excel</button>
+    <button class="btn" disabled=${vazio} onClick=${() => baixarPDF(nome, columns, rows, titulo || nome)}>PDF</button>`;
+}
+
 /* ======================================================================
    REGRAS DE NEGÓCIO
    ====================================================================== */
