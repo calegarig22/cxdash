@@ -99,10 +99,10 @@ streamlit run app.py          # abre em http://localhost:8501
 
 | Perfil | E-mail | Senha |
 |---|---|---|
-| Admin | admin@betteredu.com.br | `admin123` |
-| CX | ana.cx@betteredu.com.br | `cx123` |
-| Financeiro | bruno.fin@betteredu.com.br | `fin123` |
-| Coordenação | carla.coord@betteredu.com.br | `coord123` |
+| Admin | admin@btd.com.br | `admin123` |
+| CX | ana.cx@btd.com.br | `cx123` |
+| Financeiro | bruno.fin@btd.com.br | `fin123` |
+| Coordenação | carla.coord@btd.com.br | `coord123` |
 
 > Credenciais e dados são **fictícios**, criados automaticamente para a demonstração.
 > Para colocar a versão web no ar (Supabase + Vercel), veja **[`web/README.md`](web/README.md)**.
