@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    { "path": "/api/cron-digest", "schedule": "0 11 * * *" },
+    { "path": "/api/cron-recalc", "schedule": "30 5 * * *" },
+    { "path": "/api/cron-autotasks", "schedule": "0 6 * * *" },
+    { "path": "/api/cron-vendas", "schedule": "0 8 * * *" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh; style-src 'self' 'unsafe-inline'; connect-src 'self' https://esm.sh https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; font-src 'self' data:; frame-src https://recibos-alumni.vercel.app; base-uri 'self'; object-src 'none'; frame-ancestors 'none'" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    }
+  ]
+}
