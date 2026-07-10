@@ -8,7 +8,7 @@ import { store } from "../lib/store.js";
 import { useCollection, useUsers, useSelecao } from "../lib/hooks.js";
 import {
   Badge, Table, Modal, Tabs, Kpi, BarChart, Text, Area, Select, FilterSelect,
-  Assignee, BulkBar, aplicarEscopo, podeVerTudo, toast, baixarCSV, DOM,
+  Assignee, BulkBar, toast, baixarCSV, DOM,
 } from "../lib/ui.js";
 import { alertarSlack } from "../lib/notify.js";
 
@@ -82,15 +82,12 @@ function Dashboard({ rows }) {
 
 /* ================================ LISTA ================================ */
 function Lista({ user, users, rows }) {
-  const verTudo = podeVerTudo(user.perfil);
-  const [escopo, setEscopo] = useState("minhas");
   const [edit, setEdit] = useState(null);
   const [fCat, setFCat] = useState("");
   const [fTipo, setFTipo] = useState("");
   const [fStatus, setFStatus] = useState("");
 
-  const base = aplicarEscopo(rows, user, verTudo ? escopo : "minhas");
-  const filtradas = base.filter((r) =>
+  const filtradas = rows.filter((r) =>
     (!fCat || r.categoria === fCat) &&
     (!fTipo || r.tipo === fTipo) &&
     (!fStatus || r.status === fStatus));
@@ -126,9 +123,6 @@ function Lista({ user, users, rows }) {
   ];
 
   return html`
-    ${verTudo ? html`<div style="margin-bottom:14px">${Tabs({ value: escopo, onInput: setEscopo,
-      options: [["minhas", "Minhas"], ["todas", "Equipe (todas)"]] })}</div>` : ""}
-
     <div class="toolbar">
       ${FilterSelect({ label: "Categoria", value: fCat, onInput: setFCat, options: DOM.voc_categoria })}
       ${FilterSelect({ label: "Tipo", value: fTipo, onInput: setFTipo, options: DOM.voc_tipo })}
@@ -136,7 +130,7 @@ function Lista({ user, users, rows }) {
       <div class="grow"></div>
       <button class="btn" onClick=${() =>baixarCSV("voice_of_customer", cols, filtradas)}>Exportar</button>
     </div>
-    <div class="count">${filtradas.length} feedback(s)${verTudo && escopo === "todas" ? " · equipe" : " · minhas"}</div>
+    <div class="count">${filtradas.length} feedback(s)</div>
     ${BulkBar({ n: sel.size, onClear: clear, actions: [
       { label: `Resolver (${sel.size})`, kind: "ok", on: bulkResolver },
       { label: `Excluir (${sel.size})`, kind: "danger", on: bulkExcluir },
