@@ -105,26 +105,7 @@ export function View({ user }) {
   const [escopo, setEscopo] = useState("minhas");
   const [novo, setNovo] = useState(null);
   const [edit, setEdit] = useState(null);
-  const [subindo, setSubindo] = useState(false);
   const [fResult, setFResult] = useState("");
-
-  // Admin sobe o CSV da aba Vendas → atualiza a tabela `vendas` (só admin)
-  const subirVendas = async (e) => {
-    const file = e.target.files && e.target.files[0];
-    e.target.value = "";
-    if (!file) return;
-    setSubindo(true);
-    try {
-      const csv = await file.text();
-      const tk = await store.auth.token();
-      const r = await fetch("/api/venda-upload", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + tk }, body: JSON.stringify({ csv }) });
-      const j = await r.json();
-      if (j.error === "forbidden") toast("Apenas o Admin pode atualizar as vendas.", "err");
-      else if (j.error) toast("Falha ao atualizar: " + j.error, "err");
-      else toast(`Vendas atualizadas — ${j.carregados} aluno(s).`);
-    } catch (err) { toast("Não consegui ler/enviar o arquivo.", "err"); }
-    setSubindo(false);
-  };
   const [fBusca, setFBusca] = useState("");
 
   const base = aplicarEscopo(rows, user, verTudo ? escopo : "minhas");
@@ -193,10 +174,6 @@ export function View({ user }) {
 
     <div class="toolbar">
       <button class="btn primary" onClick=${() =>setNovo(vazio(user))}>Novo caso</button>
-      ${admin ? html`<label class="btn ok" title="Baixe a aba Vendas em CSV e selecione o arquivo aqui">
-        ${subindo ? "Atualizando…" : "↻ Atualizar vendas do dia"}
-        <input type="file" accept=".csv,text/csv" style="display:none" disabled=${subindo} onChange=${subirVendas}/>
-      </label>` : ""}
       ${FilterSelect({ label: "Resultado", value: fResult, onInput: setFResult, options: DOM.resultado_caso })}
       <div class="grow"><label>Aluno</label>
         <input placeholder="buscar por aluno" value=${fBusca} onInput=${(e) =>setFBusca(e.target.value)}/></div>
